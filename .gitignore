@@ -1,0 +1,6 @@
+/vendor
+/.idea
+.docker/mysql/dbdata
+Homestead.json
+Homestead.yaml
+.env
