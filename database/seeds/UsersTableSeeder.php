@@ -15,6 +15,8 @@ class UsersTableSeeder extends Seeder
             'name' => 'Administrador',
             'email' => 'administrador@mail.com',
             'password' => app('hash')->make('1q2w3e4r'),
+            'cpf' => '000.000.000-00',
+            'cnpj' => ''
         ]);
     }
 }

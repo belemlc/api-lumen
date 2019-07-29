@@ -18,3 +18,5 @@ $router->get('/', function () use ($router) {
 $router->post('/login', 'AuthController@login');
 
 $router->get('/me', ['middleware' => 'auth:api', 'uses' => 'AuthController@me']);
+
+$router->post('/users', ['uses' => 'UserController@create']);
