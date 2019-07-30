@@ -1,4 +1,7 @@
 <?php
+use App\Mail\ResetPassword;
+use Illuminate\Support\Facades\Mail;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -20,3 +23,14 @@ $router->post('/login', 'AuthController@login');
 $router->get('/me', ['middleware' => 'auth:api', 'uses' => 'AuthController@me']);
 
 $router->post('/users', ['uses' => 'UserController@create']);
+
+$router->get('/login/forgot', 'AuthController@forgot');
+
+$router->post('/login/reset/{token}', ['as' => 'password.reset', 'uses' => 'AuthController@reset']);
+
+// $router->get('/mail', function() {
+//     Mail::to(['belemlc@gmail.com'])->send(new ResetPassword);
+
+//     return new ResetPassword;
+// });
+

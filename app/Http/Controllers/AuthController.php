@@ -2,9 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\Controller;
+use App\Models\User;
+use App\Mail\ResetPassword;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -15,7 +20,7 @@ class AuthController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth:api', ['except' => ['login']]);
+        $this->middleware('auth:api', ['except' => ['login', 'forgot', 'reset']]);
     }
 
     /**
@@ -32,6 +37,40 @@ class AuthController extends Controller
         }
 
         return $this->respondWithToken($token);
+    }
+
+    public function forgot(Request $request)
+    {
+        try {
+            $user = User::where(['email' => $request->email])->first();
+            Mail::to([$request->email])->send(new ResetPassword($user->name, $request->email));
+            return response()->json([
+                'status' => true,
+                'message' => 'Email enviado com sucesso!'
+            ]);
+        } catch (\Throwable $th) {
+            throw $th->getMessage();
+        }
+    }
+
+    public function reset(Request $request)
+    {
+        try {
+            $password = Hash::make($request->password);
+            $user = User::where(['reset_password' => $request->token])->first();
+            $user->update(['password' => $password]);
+            User::where(['reset_password' => $request->token])->update(['reset_password' => null]);
+            return response()->json([
+                'status' => true,
+                'message' => 'Senha alterado com sucesso!'
+            ]);
+        } catch (\Throwable $th) {
+            Log::error('authController: ' . $th->getMessage());
+            return response()->json([
+                'data' => null,
+                'error' => $th->getMessage()
+            ]);
+        }
     }
 
     /**
