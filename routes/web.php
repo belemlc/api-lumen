@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Mail;
 */
 
 $router->get('/', function () use ($router) {
-    return $router->app->version();
+    return response()->json('Welcome Hermes API :)', 404);
 });
 
 $router->post('/login', 'AuthController@login');
