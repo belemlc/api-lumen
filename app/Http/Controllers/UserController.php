@@ -24,6 +24,8 @@ class UserController extends Controller
 
     public function create(Request $request)
     {
+        $password = Hash::make($request->password);
+        $request->merge(['password' => $password]);
         $user = User::create($request->all());
         if ($user) {
             $data = [
