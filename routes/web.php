@@ -24,6 +24,13 @@ $router->get('/me', ['middleware' => 'auth:api', 'uses' => 'AuthController@me'])
 
 $router->post('/users', ['uses' => 'UserController@create']);
 
+// Cria uma lista de contatos para o usuario
+$router->post('/user/{id}/lists', ['middleware' => 'auth:api', 'as' => 'contact-list.create' ,'uses' => 'ContactListController@create']);
+// Atualiza uma lista
+$router->put('/user/{userid}/list/{listaid}', ['middleware' => 'auth:api', 'as' => 'contact-list.updatte' ,'uses' => 'ContactListController@update']);
+// Pega todas as listar do usuário
+$router->get('/user/{id}/lists', ['middleware' => 'auth:api', 'as' => 'contact-list.get' ,'uses' => 'ContactListController@view']);
+
 $router->get('/login/forgot', 'AuthController@forgot');
 
 $router->post('/login/reset/{token}', ['as' => 'password.reset', 'uses' => 'AuthController@reset']);
