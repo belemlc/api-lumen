@@ -13,4 +13,9 @@ class ContactList extends Model
     protected $fillable = [
         'name', 'title', 'description', 'logo', 'user_id'
     ];
+
+    public function contacts()
+    {
+        return $this->hasMany('App\Models\Contact', 'contact_list_id' ,'id');
+    }
 }

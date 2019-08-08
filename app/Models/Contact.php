@@ -3,7 +3,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Contacts extends Model
+class Contact extends Model
 {
     protected $fillable = [
         'name',
@@ -11,6 +11,7 @@ class Contacts extends Model
         'gender',
         'birtday',
         'cep',
+        'street',
         'region',
         'city',
         'state',
@@ -19,4 +20,9 @@ class Contacts extends Model
         'contact_list_id',
         'user_id'
     ];
+
+    public function contactList()
+    {
+        return $this->hasMany('App\Models\ContactList', 'id', 'contact_list_id');
+    }
 }
