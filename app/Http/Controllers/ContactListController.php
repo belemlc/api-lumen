@@ -18,9 +18,24 @@ class ContactListController extends Controller
         //
     }
 
-    public function index(Request $request)
+    public function index(Request $request, $userid)
     {
-        //
+        try {
+            $contacts = ContactList::where(['user_id' => $userid])->with('contacts')->get();
+            $data = [
+                'code' => 200,
+                'message' => '',
+                'result' => $contacts
+            ];
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            $data = [
+                'code' => 403,
+                'error' => 'Erro ao tentar pegar as listas do usuário.',
+                'errorMessage' => $th->getMessage()
+            ];
+            return response()->json($data, 403);
+        }
     }
 
     public function create(Request $request, $userid)

@@ -2,6 +2,12 @@ FROM php:7.3.6-fpm-alpine
 
 RUN apk add --no-cache openssl bash mysql-client
 RUN docker-php-ext-install pdo pdo_mysql
+# Zip
+RUN apk add --no-cache libzip-dev \
+    && docker-php-ext-configure zip --with-libzip=/usr/include \
+    && docker-php-ext-install zip
+
+
 
 # Dockerize
 ENV DOCKERIZE_VERSION v0.6.1
