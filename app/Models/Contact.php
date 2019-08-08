@@ -2,6 +2,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Contact extends Model
 {
@@ -9,7 +10,7 @@ class Contact extends Model
         'name',
         'email',
         'gender',
-        'birtday',
+        'birthday',
         'cep',
         'street',
         'region',
@@ -20,6 +21,26 @@ class Contact extends Model
         'contact_list_id',
         'user_id'
     ];
+
+    public function getBirthdayAttribute($value)
+    {
+        return date('d/m/Y', strtotime($value));
+    }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('d/m/Y', strtotime($value));
+    }
+
+    public function setBirthdayAttribute($value)
+    {
+        $this->attributes['birthday'] = implode('-', array_reverse(explode('/', $value)));
+    }
+
+    public function setGenderAttribute($value)
+    {
+        $this->attributes['gender'] = \strtolower($value);
+    }
 
     public function contactList()
     {

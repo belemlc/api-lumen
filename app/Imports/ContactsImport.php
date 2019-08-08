@@ -41,18 +41,14 @@ class ContactsImport
             $header = $contacts[0];
             unset($contacts[0]);
 
-            foreach($contacts as $contact) {
-                
-                $birthday = implode('-', array_reverse(explode('/', $contact[4])));
-                $gender = \strtolower($contact[3]);
-
+            foreach ($contacts as $contact) {
                 if (!empty($contact[0]) && !empty($contact[1])) {
                     $data = [
                         'name' => $contact[0],
                         'cellphone' => $contact[1],
                         'email' => $contact[2],
-                        'gender' => $gender,
-                        'birthday' => $birthday,
+                        'gender' => $contact[3],
+                        'birthday' => $contact[4],
                         'region' => $contact[5],
                         'city' => $contact[6],
                         'state' => $contact[7],
