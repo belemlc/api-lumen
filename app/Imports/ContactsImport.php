@@ -43,7 +43,7 @@ class ContactsImport
 
             foreach($contacts as $contact) {
                 
-                $birtday = implode('-', array_reverse(explode('/', $contact[4])));
+                $birthday = implode('-', array_reverse(explode('/', $contact[4])));
                 $gender = \strtolower($contact[3]);
 
                 if (!empty($contact[0]) && !empty($contact[1])) {
@@ -52,7 +52,7 @@ class ContactsImport
                         'cellphone' => $contact[1],
                         'email' => $contact[2],
                         'gender' => $gender,
-                        'birtday' => $birtday,
+                        'birthday' => $birthday,
                         'region' => $contact[5],
                         'city' => $contact[6],
                         'state' => $contact[7],
