@@ -112,7 +112,7 @@ class ContactListController extends Controller
                 throw new Exception("Não foi possível remover a lista, existe contatos.", 1);
             }
             ContactList::find($listid)->delete();
-            $lists = ContactList::where(['user_id' => $userid])->with('contacts')->count();
+            $lists = ContactList::where(['user_id' => $userid])->with('contacts')->get();
             $data = [
                 'code' => 200,
                 'message' => 'Lista de contato removida com sucesso.',

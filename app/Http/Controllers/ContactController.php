@@ -69,8 +69,21 @@ class ContactController extends Controller
                 'error' => 'É obrigatório o arquivo para importação.'
             ], 404);
         }
-        $data = ContactsImport::import($request->file, $userid, $listid);
-        return response()->json($data, $data['code']);
+        
+        $imported = ContactsImport::import($request->file, $userid, $listid);
+        if (!$imported) {
+            return response()->json([
+                'code' => 404,
+                'error' => 'Erro ao tentar importar'
+            ], 404);
+        }
+        $contacts = ContactList::where(['id' => $listid])->with('contacts')->first();
+        $data = [
+            'code' => 200,
+            'message' => 'Contato importado com sucesso.',
+            'result' => $contacts
+        ];
+        return response()->json($data, 200);
     }
 
     public function view(Request $request, $list, $contact)
@@ -124,7 +137,7 @@ class ContactController extends Controller
     {
         try {
             Contact::find($id)->delete();
-            $contacts = ContactList::find($listid)->with('contacts')->first();
+            $contacts = ContactList::where(['id' => $listid])->with('contacts')->first();
             $data = [
                 'code' => 200,
                 'message' => 'Contato removido com sucesso.',
