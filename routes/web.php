@@ -32,9 +32,11 @@ $router->post('/users', ['uses' => 'UserController@create']);
 # Create
 $router->post('/user/{id}/lists', ['middleware' => 'auth:api', 'as' => 'contact-list.create' ,'uses' => 'ContactListController@create']);
 // Update
-$router->put('/user/{userid}/list/{listaid}', ['middleware' => 'auth:api', 'as' => 'contact-list.updatte' ,'uses' => 'ContactListController@update']);
+$router->put('/user/{userid}/list/{listid}', ['middleware' => 'auth:api', 'as' => 'contact-list.updatte' ,'uses' => 'ContactListController@update']);
 # Get All
 $router->get('/user/{id}/lists', ['middleware' => 'auth:api', 'as' => 'contact-list.get' ,'uses' => 'ContactListController@view']);
+# Delete
+$router->delete('/user/{userid}/list/{listid}', ['middleware' => 'auth:api', 'as' => 'contact-list.delete' ,'uses' => 'ContactListController@destroy']);
 
 /*
 |--------------------------------------------------------------------------
@@ -43,10 +45,24 @@ $router->get('/user/{id}/lists', ['middleware' => 'auth:api', 'as' => 'contact-l
 | Rotas para contatos
 */
 # Create
-$router->post('/user/{userid}/list/{listid}/contacts/import', ['middleware' => 'auth:api', 'as' => 'contacts.import' ,'uses' => 'ContactController@create']);
+$router->post('/list/{listid}/contacts', ['middleware' => 'auth:api', 'as' => 'contacts.create' ,'uses' => 'ContactController@create']);
+# Import
+$router->post('/user/{userid}/list/{listid}/contacts/import', ['middleware' => 'auth:api', 'as' => 'contacts.import' ,'uses' => 'ContactController@import']);
 # Get All
 $router->get('/list/{listid}/contacts', ['middleware' => 'auth:api', 'as' => 'contacts.all' ,'uses' => 'ContactController@index']);
+# Get Contato
+$router->get('/list/{listid}/contact/{contactid}', ['middleware' => 'auth:api', 'as' => 'contacts.view' ,'uses' => 'ContactController@view']);
+# Update
+$router->put('/list/{listid}/contact/{contactid}', ['middleware' => 'auth:api', 'as' => 'contacts.update' ,'uses' => 'ContactController@update']);
+# Delete
+$router->delete('/list/{listid}/contact/{contactid}', ['middleware' => 'auth:api', 'as' => 'contacts.delete' ,'uses' => 'ContactController@destroy']);
 
+/*
+|--------------------------------------------------------------------------
+| Forgot Password
+|--------------------------------------------------------------------------
+| Rotas para Esqueceu a senha
+*/
 $router->get('/login/forgot', 'AuthController@forgot');
 
 $router->post('/login/reset/{token}', ['as' => 'password.reset', 'uses' => 'AuthController@reset']);

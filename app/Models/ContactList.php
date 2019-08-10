@@ -18,4 +18,9 @@ class ContactList extends Model
     {
         return $this->hasMany('App\Models\Contact', 'contact_list_id' ,'id');
     }
+
+    public function getCreatedAtAttribute($value)
+    {
+        return date('d/m/Y', strtotime($value));
+    }
 }

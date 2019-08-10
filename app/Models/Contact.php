@@ -34,7 +34,14 @@ class Contact extends Model
 
     public function setBirthdayAttribute($value)
     {
-        $this->attributes['birthday'] = implode('-', array_reverse(explode('/', $value)));
+        if (!empty($value)) {
+            $this->attributes['birthday'] = implode('-', array_reverse(explode('/', $value)));
+        }
+    }
+
+    public function setCellphoneAttribute($value)
+    {
+        $this->attributes['cellphone'] = preg_replace('/[^0-9]/s', '', $value);
     }
 
     public function setGenderAttribute($value)
