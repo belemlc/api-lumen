@@ -6,6 +6,7 @@ use App\Models\Contact;
 use PhpOffice\PhpSpreadsheet\Reader\Csv;
 use PhpOffice\PhpSpreadsheet\Reader\Xls;
 use PhpOffice\PhpSpreadsheet\Reader\Xlsx;
+use Illuminate\Support\Facades\Log;
 
 class ContactsImport
 {
@@ -63,9 +64,10 @@ class ContactsImport
                     ], $data);
                 }
             }
-            return true;
+            return ['success' => true, 'message' => ''];
         } catch (\Exception $e) {
-            return false;
+            Log::error('IMPORT ERROR: ' . $e->getMessage());
+            return ['success' => false, 'message' => $e->getMessage()];
             // $e->getMessage()
         }
 

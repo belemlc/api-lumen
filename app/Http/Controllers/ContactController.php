@@ -71,11 +71,11 @@ class ContactController extends Controller
         }
         
         $imported = ContactsImport::import($request->file, $userid, $listid);
-        if (!$imported) {
+        if (!$imported['success']) {
             return response()->json([
-                'code' => 404,
-                'error' => 'Erro ao tentar importar'
-            ], 404);
+                'code' => 500,
+                'error' => $imported['message']
+            ], 500);
         }
         $contacts = ContactList::where(['id' => $listid])->with('contacts')->first();
         $data = [
