@@ -63,18 +63,10 @@ class ContactsImport
                     ], $data);
                 }
             }
-            return [
-                'metadata' => [],
-                'code' => 200,
-                'message' => 'Importação efetuada com sucecsso.'
-            ];
+            return true;
         } catch (\Exception $e) {
-            return [
-                'metadata' => [],
-                'code' => 500,
-                'error' => $e->getMessage(),
-                'message' => 'Erro ao tentar importar o contato.'
-            ];
+            return false;
+            // $e->getMessage()
         }
 
 
