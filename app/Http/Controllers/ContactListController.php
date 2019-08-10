@@ -5,6 +5,7 @@ use App\Models\User;
 use App\Models\ContactList;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
+use App\Models\Contact;
 
 class ContactListController extends Controller
 {
@@ -61,7 +62,7 @@ class ContactListController extends Controller
     public function view(Request $request, $userid)
     {
         try {
-            $listas = ContactList::where(['user_id' => $userid])->get();
+            $listas = ContactList::where(['user_id' => $userid])->with('contacts')->get();
             $data = [
                 'code' => 200,
                 'message' => '',
@@ -103,8 +104,28 @@ class ContactListController extends Controller
         }
     }
 
-    public function delete($id, Request $request)
+    public function destroy(Request $request, $userid, $listid)
     {
-        //
+        try {
+            $contacts = Contact::where(['contact_list_id' => $listid])->count();
+            if ($contacts > 0) {
+                throw new Exception("Não foi possível remover a lista, existe contatos.", 1);
+            }
+            ContactList::find($listid)->delete();
+            $lists = ContactList::where(['user_id' => $userid])->with('contacts')->count();
+            $data = [
+                'code' => 200,
+                'message' => 'Lista de contato removida com sucesso.',
+                'results' => $lists
+            ];
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            $data = [
+                'code' => 500,
+                'message' => 'Erro ao tentar excluir um contato.',
+                'error' => $th->getMessage()
+            ];
+            return response()->json($data, 500);
+        }
     }
 }

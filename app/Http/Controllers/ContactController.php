@@ -23,7 +23,7 @@ class ContactController extends Controller
     public function index(Request $request, $listid)
     {
         try {
-            $contacts = ContactList::find($listid)->with('contacts')->first();
+            $contacts = ContactList::where(['id' => $listid])->with('contacts')->first();
             $data = [
                 'code' => 200,
                 'message' => '',
@@ -40,7 +40,28 @@ class ContactController extends Controller
         }
     }
 
-    public function create(Request $request, $userid, $listid)
+    public function create(Request $request, $listid)
+    {
+        try {
+            $request->merge(['contact_list_id' => $listid]);
+            Contact::create($request->all());
+            $data = [
+                'code' => 200,
+                'message' => 'Contato criado com sucesso.',
+                'result' => []
+            ];
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            $data = [
+                'code' => 500,
+                'message' => 'Erro ao tentar criar um contato.',
+                'error' => $th->getMessage()
+            ];
+            return response()->json($data, 500);
+        }
+    }
+    
+    public function import(Request $request, $userid, $listid)
     {
         if (!$request->hasFile('file')) {
             return response()->json([
@@ -52,9 +73,24 @@ class ContactController extends Controller
         return response()->json($data, $data['code']);
     }
 
-    public function view($id, Request $request)
+    public function view(Request $request, $list, $contact)
     {
-        //
+        try {
+            $contact = Contact::find($contact);
+            $data = [
+                'code' => 200,
+                'message' => '',
+                'result' => $contact
+            ];
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            $data = [
+                'code' => 403,
+                'error' => 'Erro ao tentar pegar o contato.',
+                'errorMessage' => $th->getMessage()
+            ];
+            return response()->json($data, 403);
+        }
     }
 
     public function edit($id, Request $request)
@@ -62,13 +98,46 @@ class ContactController extends Controller
         //
     }
 
-    public function update($id, Request $request)
+    public function update(Request $request, $listid, $id)
     {
-        //
+        try {
+            $request->except('id');
+            Contact::find($id)->update($request->all());
+            $contacts = ContactList::find($listid)->with('contacts')->first();
+            $data = [
+                'code' => 200,
+                'message' => 'Contato atualizado com sucesso.',
+                'results' => $contacts
+            ];
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            $data = [
+                'code' => 500,
+                'message' => 'Erro ao tentar atualizar o contato.',
+                'error' => $th->getMessage()
+            ];
+            return response()->json($data, 500);
+        }
     }
 
-    public function delete($id, Request $request)
+    public function destroy(Request $request, $listid, $id)
     {
-        //
+        try {
+            Contact::find($id)->delete();
+            $contacts = ContactList::find($listid)->with('contacts')->first();
+            $data = [
+                'code' => 200,
+                'message' => 'Contato removido com sucesso.',
+                'results' => $contacts
+            ];
+            return response()->json($data, 200);
+        } catch (\Throwable $th) {
+            $data = [
+                'code' => 500,
+                'message' => 'Erro ao tentar excluir um contato.',
+                'error' => $th->getMessage()
+            ];
+            return response()->json($data, 500);
+        }
     }
 }
