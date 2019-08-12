@@ -39,17 +39,19 @@ class ContactsImport
                     # code...
                     break;
             }
+            
             $header = $contacts[0];
             unset($contacts[0]);
 
             foreach ($contacts as $contact) {
                 if (!empty($contact[0]) && !empty($contact[1])) {
+                    $birthday = !strpos($contact[4], '/') ? null : $contact[4];
                     $data = [
                         'name' => $contact[0],
                         'cellphone' => $contact[1],
                         'email' => $contact[2],
                         'gender' => $contact[3],
-                        'birthday' => $contact[4],
+                        'birthday' => $birthday,
                         'region' => $contact[5],
                         'city' => $contact[6],
                         'state' => $contact[7],
