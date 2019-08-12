@@ -22,14 +22,16 @@ class Contact extends Model
         'user_id'
     ];
 
-    public function getBirthdayAttribute($value)
+    public function getCreatedAtAttribute($value)
     {
         return date('d/m/Y', strtotime($value));
     }
 
-    public function getCreatedAtAttribute($value)
+    public function getBirthdayAttribute($value)
     {
-        return date('d/m/Y', strtotime($value));
+        if (!empty($value)) {
+            return date('d/m/Y', strtotime($value));
+        }
     }
 
     public function setBirthdayAttribute($value)
